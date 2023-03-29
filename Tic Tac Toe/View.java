@@ -2,19 +2,16 @@ import java.awt.*;
 import javax.swing.*;
 
 class View extends JFrame {
-	public Model m;
-	public JFrame frame;
-	public JPanel panel;
-	public JPanel game;
-	public JButton[] button;
-	public JButton newGame;
-	public JLabel indicator;
-	public JLabel turns;
-	public JPanel settings;
-	public JPanel messages;
+	Model model;
+	JFrame frame;
+	JPanel panel, game, settings, messages;
+	JButton[] button;
+	JButton newGame;
+	JLabel indicator, turns;
 
-	public View(Model m) {
-		this.m = m;
+	public View(Model model) {
+		this.model = model;
+
 		this.frame = new JFrame("Tic Tac Toe");
 		this.panel = new JPanel(new FlowLayout());
 		this.game = new JPanel(new GridLayout(3, 3));
@@ -27,7 +24,7 @@ class View extends JFrame {
 		this.newGame.setEnabled(true);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(new Dimension(600, 600));
+		frame.setBounds(500, 150, 600, 600);
 		panel.add(game, BorderLayout.CENTER);
 		settings.add(newGame);
 		frame.add(settings);
@@ -105,5 +102,4 @@ class View extends JFrame {
 	void endGame() {
 		this.newGame.setEnabled(true);
 	}
-
 }

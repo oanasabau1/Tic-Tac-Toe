@@ -4,13 +4,13 @@ public class Model {
 	public int counter = 0;
 
 	public void setChoice(int field, Value value) {
-		int valoare = 0;
-		if (value == Value.X) {  //avem -1 pentru X
-			valoare = -1;
-		} else if (value == Value.O) { //1 pentru 0
-			valoare = 1;
+		int val = 0;
+		if (value == Value.X) {  //X=-1
+			val = -1;
+		} else if (value == Value.O) { //O=1
+			val = 1;
 		}
-		board[field % 3][field / 3] = valoare;
+		board[field % 3][field / 3] = val;
 		counter++;
 	}
 
@@ -42,5 +42,4 @@ public class Model {
 	    }
 		return false;
 	}
-	
 }
