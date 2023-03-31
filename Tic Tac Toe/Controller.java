@@ -1,54 +1,83 @@
+import java.awt.event.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class Controller implements ActionListener {
     Model model;
     View view;
 
-    public Controller(Model model, View view) {
+    Controller(Model model, View view) {
         this.model = model;
         this.view = view;
-        addActionListeners();
-    }
 
-    public void addActionListeners() {
-        for (JButton bton : view.button) {
-            bton.addActionListener(this);
+        // Register listeners
+        for (int i = 0; i < 9; i++) {
+            view.button[i].addActionListener(this);
         }
         view.newGame.addActionListener(this);
+        view.exit.addActionListener(this);
     }
 
-    public boolean addChoice(Integer field, Value value) {
-        model.setChoice(field, value);
-        if (model.counter >= 5) {
-            if (model.checkBoard()) {
-                view.winGame();
-                view.endGame();
-                return true;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == view.newGame) {
+            model.resetBoard();
+            view.newGame.setText("New game");
+            for (int i = 0; i < 9; i++) {
+                view.button[i].setEnabled(true);
             }
-            if (model.counter == 9) {
-                view.endGame();
-                view.match();
+            updateView();
+        } else if (e.getSource() == view.exit) {
+            System.exit(0);
+        } else {
+            JButton button = (JButton) e.getSource();
+            int index = -1;
+            for (int i = 0; i < 9; i++) {
+                if (button == view.button[i]) {
+                    index = i;
+                    view.button[i].setEnabled(false); //the move can be made just once
+                    break;
+                }
+            }
+            if (index != -1) {  //if a button was clicked
+                // Convert button index to row and column indices
+                int row = index / 3;
+                int col = index % 3;
+                model.makeMove(row, col);
+                updateView();
             }
         }
-        return false;
     }
 
-    public void actionPerformed(ActionEvent e) {
-        Value currentPlayer = view.getCurrentPlayerValue();
-        if (Arrays.asList(view.button).contains(e.getSource()) && currentPlayer != null) {
-            Integer bton = Arrays.asList(view.button).indexOf((JButton) e.getSource());
-            ((JButton) e.getSource()).setText(view.getCurrentPlayerString());
-            view.pack();
-            ((JButton) e.getSource()).setEnabled(false);
-            if (!addChoice(bton, currentPlayer)) view.changePlayer();
-        } else if (e.getSource().equals(view.newGame)) {
-            this.view.dispose();
-            this.view = new View(model);
-            addActionListeners();
-            this.model = new Model();
+    public void updateView() {  //this method updates the view by marking the board with X or O and determines the game's continuation by showing the player's turn or the winner
+        int[][] board = model.getBoard();
+        for (int i = 0; i < 9; i++) {
+            int row = i / 3;
+            int col = i % 3;
+            if (board[row][col] == 1) {
+                view.button[i].setText("X");
+            } else if (board[row][col] == -1) {
+                view.button[i].setText("O");
+            } else {
+                view.button[i].setText("");
+            }
+        }
+        if (model.checkBoard()) {
+            String winner = model.getOpponentPlayer();
+            view.text.setText(winner + " wins!");
+            view.newGame.setText("Restart");
+            disableButtons();
+        } else if (model.isBoardFull()) {
+            view.text.setText("It's a tie!");
+            view.newGame.setText("Restart");
+            disableButtons();
+        } else {
+            view.text.setText(model.getCurrentPlayer() + " turns");
+        }
+    }
+
+    public void disableButtons() {  //method to disable all the buttons after one player wins or it's a tie
+        for (int i = 0; i < 9; i++) {
+            view.button[i].setEnabled(false);
         }
     }
 }
