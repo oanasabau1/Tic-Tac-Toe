@@ -1,5 +1,5 @@
 # Tic-Tac-Toe
-This simple Tic Tac Toe game has been completed during a college project. The game uses the MVC (Model-View-Controller) architecture and it is written in Java and uses Java Swing for GUI. I have modified it since: the Graphical User Interface contains now an exit button, i find it more user-friendly and I improved the logic behind by better structring the M-V-C classes.
+This simple Tic Tac Toe game has been completed during a college project. The game uses the MVC (Model-View-Controller) architecture and it is written in Java and uses Java Swing for GUI. I have modified it since: the Graphical User Interface contains now an exit button, i find it more user-friendly and I improved the logic behind by better structuring the M-V-C classes.
 
 Here is a preview of the designed game:
 
